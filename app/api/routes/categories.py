@@ -1,30 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List, Optional
-from pydantic import BaseModel, Field
+from typing import List
 from app.core.database import get_db
 from app.models.category import Category
+from app.schemas.category import CategoryCreate, CategoryUpdate, CategoryResponse
 
 router = APIRouter()
 
-# Schemas
-class CategoryBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=50)
-    description: Optional[str] = Field(None, max_length=200)
-
-class CategoryCreate(CategoryBase):
-    pass
-
-class CategoryUpdate(BaseModel):
-    name: Optional[str] = Field(None, min_length=1, max_length=50)
-    description: Optional[str] = Field(None, max_length=200)
-
-class CategoryResponse(CategoryBase):
-    id: int
-    class Config:
-        from_attributes = True
-
-# Routes
 @router.get("/", response_model=List[CategoryResponse])
 def get_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return db.query(Category).offset(skip).limit(limit).all()

@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from typing import Optional
+from pathlib import Path
 
 class Settings(BaseSettings):
     # 프로젝트 기본 정보
@@ -11,7 +12,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
 
     class Config:
-        env_file = ".env"
+        env_file = Path(__file__).parent.parent / ".env"
         case_sensitive = True
 
 # 설정 인스턴스 생성

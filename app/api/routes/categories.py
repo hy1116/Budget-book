@@ -1,55 +1,68 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
-from app.db.database import get_db
-from app.schemas.category import CategoryCreate, CategoryResponse, CategoryUpdate
-from app.service.category_service import CategoryService
+from typing import List, Optional
+from pydantic import BaseModel, Field
+from app.core.database import get_db
+from app.models.category import Category
 
 router = APIRouter()
 
-@router.get("/", response_model=List[CategoryResponse], summary="카테고리 목록 조회")
-def get_categoryies(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
-    """전체 카테고리 조회"""
-    categorys = CategoryService.get_all(db, skip=skip, limit=limit)
-    return categorys
+# Schemas
+class CategoryBase(BaseModel):
+    name: str = Field(..., min_length=1, max_length=50)
+    description: Optional[str] = Field(None, max_length=200)
 
-@router.get("/{category_id}", response_model=CategoryResponse, summary="특정 카테고리 조회")
+class CategoryCreate(CategoryBase):
+    pass
+
+class CategoryUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=50)
+    description: Optional[str] = Field(None, max_length=200)
+
+class CategoryResponse(CategoryBase):
+    id: int
+    class Config:
+        from_attributes = True
+
+# Routes
+@router.get("/", response_model=List[CategoryResponse])
+def get_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return db.query(Category).offset(skip).limit(limit).all()
+
+@router.get("/{category_id}", response_model=CategoryResponse)
 def get_category(category_id: int, db: Session = Depends(get_db)):
-    """특정 카테고리 조회"""
-    category = CategoryService.get_by_id(db,category_id=category_id)
+    category = db.query(Category).filter(Category.id == category_id).first()
     if not category:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"category with id {category_id} not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Category {category_id} not found")
     return category
 
-@router.post("/", response_model=CategoryResponse, summary="카테고리 생성")
+@router.post("/", response_model=CategoryResponse, status_code=201)
 def create_category(category: CategoryCreate, db: Session = Depends(get_db)):
-    """카테고리 생성"""
-    return CategoryService.create(db, category)
+    db_category = Category(**category.model_dump())
+    db.add(db_category)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
 
-@router.put("/{category_id}", response_model=CategoryResponse, summary="카테고리 수정")
+@router.put("/{category_id}", response_model=CategoryResponse)
 def update_category(category_id: int, category: CategoryUpdate, db: Session = Depends(get_db)):
-    """카테고리 수정"""
-    updated_category = CategoryService.update(db,category_id=category_id,category=category)
-    if not updated_category:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"category with id {category_id} not found"
-        )
-    return updated_category
+    db_category = db.query(Category).filter(Category.id == category_id).first()
+    if not db_category:
+        raise HTTPException(status_code=404, detail=f"Category {category_id} not found")
 
-@router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT, summary="카테고리 삭제")
+    update_data = category.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_category, key, value)
+
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+@router.delete("/{category_id}", status_code=204)
 def delete_category(category_id: int, db: Session = Depends(get_db)):
-    """카테고리 삭제"""
-    success =  CategoryService.delete(db,category_id=category_id)
-    if not success:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"category with id {category_id} not found"
-        )
+    db_category = db.query(Category).filter(Category.id == category_id).first()
+    if not db_category:
+        raise HTTPException(status_code=404, detail=f"Category {category_id} not found")
+
+    db.delete(db_category)
+    db.commit()

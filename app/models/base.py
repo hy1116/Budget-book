@@ -1,5 +1,5 @@
 from sqlalchemy import Column, DateTime, Integer
-from app.db.database import Base as SQLAlchemyBase
+from app.core.database import Base as SQLAlchemyBase
 from datetime import datetime, timezone
 
 class Base(SQLAlchemyBase):

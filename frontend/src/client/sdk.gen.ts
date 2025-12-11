@@ -295,7 +295,7 @@ export class LoginService {
     public static loginAccessToken(data: LoginLoginAccessTokenData): CancelablePromise<LoginLoginAccessTokenResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/login/access-token',
+            url: `${import.meta.env.VITE_API_PREFIX}/login/access-token`,
             formData: data.formData,
             mediaType: 'application/x-www-form-urlencoded',
             errors: {

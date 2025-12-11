@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlmodel import SQLModel
 from app.core.database import engine
 from app.core.config import settings
 from app.api.routes import api_router
-from app.models import Base
 
-Base.metadata.create_all(bind=engine)
+SQLModel.metadata.create_all(engine)
 
 app = FastAPI(title="Budget Book API")
 
@@ -18,6 +18,8 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix=settings.API_STR)
+
+print([route.path for route in api_router.routes])
 
 @app.get("/")
 def read_root():

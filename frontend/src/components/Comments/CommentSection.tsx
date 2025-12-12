@@ -26,7 +26,7 @@ const CommentSection = ({ itemId }: CommentSectionProps) => {
 
   const { data: commentsData, isLoading } = useQuery({
     queryKey: ["comments", itemId],
-    queryFn: () => CommentsService.readComments({ item_id: itemId }),
+    queryFn: () => CommentsService.readComments({ itemId: itemId }),
   })
 
   const comments = commentsData?.data ?? []

@@ -1,26 +1,29 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from typing import List
-from app.core.database import get_db
+from app.core.database import SessionDep, get_db
 from app.models.category import Category, CategoryCreate, CategoryUpdate, CategoryPublic
 
 router = APIRouter(prefix="/categories", tags=["categories"])
 
 @router.get("/", response_model=List[CategoryPublic])
-def get_categories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_categories(db: SessionDep, skip: int = 0, limit: int = 100):
+    """전체 카테고리 조회"""
     statement = select(Category).offset(skip).limit(limit)
     categories = db.exec(statement).all()
     return categories
 
 @router.get("/{category_id}", response_model=CategoryPublic)
-def get_category(category_id: int, db: Session = Depends(get_db)):
+def get_category(category_id: int, db: SessionDep):
+    """특정 카테고리 조회"""
     category = db.get(Category, category_id)
     if not category:
         raise HTTPException(status_code=404, detail=f"Category {category_id} not found")
     return category
 
 @router.post("/", response_model=CategoryPublic, status_code=201)
-def create_category(category: CategoryCreate, db: Session = Depends(get_db)):
+def create_category(category: CategoryCreate, db: SessionDep):
+    """카테고리 생성"""
     db_category = Category.model_validate(category)
     db.add(db_category)
     db.commit()
@@ -28,7 +31,8 @@ def create_category(category: CategoryCreate, db: Session = Depends(get_db)):
     return db_category
 
 @router.put("/{category_id}", response_model=CategoryPublic)
-def update_category(category_id: int, category: CategoryUpdate, db: Session = Depends(get_db)):
+def update_category(category_id: int, category: CategoryUpdate, db: SessionDep):
+    """카테고리 수정"""
     db_category = db.get(Category, category_id)
     if not db_category:
         raise HTTPException(status_code=404, detail=f"Category {category_id} not found")
@@ -43,7 +47,8 @@ def update_category(category_id: int, category: CategoryUpdate, db: Session = De
     return db_category
 
 @router.delete("/{category_id}", status_code=204)
-def delete_category(category_id: int, db: Session = Depends(get_db)):
+def delete_category(category_id: int, db: SessionDep):
+    """카테고리 삭제"""
     db_category = db.get(Category, category_id)
     if not db_category:
         raise HTTPException(status_code=404, detail=f"Category {category_id} not found")

@@ -5,10 +5,9 @@ from app.core.database import engine
 from app.core.config import settings
 from app.api.routes import api_router
 
-SQLModel.metadata.create_all(engine)
-
 app = FastAPI(title="Budget Book API")
 
+# CORS middleware must be added before routers
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://localhost:3000"],
@@ -18,6 +17,9 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix=settings.API_STR)
+
+# Create tables after app initialization
+SQLModel.metadata.create_all(engine)
 
 print([route.path for route in api_router.routes])
 

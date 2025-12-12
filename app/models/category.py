@@ -4,7 +4,8 @@ from datetime import datetime
 from app.models.base import Base
 
 # base schema
-class CategoryBase(Base):
+class CategoryBase(Base):    
+    id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(min_length=1, max_length=50, unique=True, index=True)
     description: str = Field(max_length=200)
 

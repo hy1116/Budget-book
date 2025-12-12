@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(api_router, prefix=settings.API_STR)
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # Create tables after app initialization
 SQLModel.metadata.create_all(engine)

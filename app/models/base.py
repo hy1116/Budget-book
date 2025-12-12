@@ -6,3 +6,6 @@ from sqlmodel import Field, SQLModel
 class Base(SQLModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc).replace(microsecond=0))
     updated_at: Optional[datetime] = Field(default_factory=lambda: datetime.now(timezone.utc).replace(microsecond=0))
+
+class Message(SQLModel):
+    message: str

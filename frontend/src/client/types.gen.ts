@@ -33,6 +33,24 @@ export type CommentUpdate = {
     content: string;
 };
 
+export type CategoryCreate = {
+    name: string;
+    description: string;
+};
+
+export type CategoryPublic = {
+    created_at: string;
+    updated_at?: (string | null);
+    id: number;
+    name: string;
+    description: string;
+};
+
+export type CategoryUpdate = {
+    name?: (string | null);
+    description?: (string | null);
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -331,3 +349,35 @@ export type UtilsTestEmailData = {
 export type UtilsTestEmailResponse = (Message);
 
 export type UtilsHealthCheckResponse = (boolean);
+
+export type CategoriesReadCategoriesData = {
+    limit?: number;
+    skip?: number;
+};
+
+export type CategoriesReadCategoriesResponse = (Array<CategoryPublic>);
+
+export type CategoriesCreateCategoryData = {
+    requestBody: CategoryCreate;
+};
+
+export type CategoriesCreateCategoryResponse = (CategoryPublic);
+
+export type CategoriesReadCategoryData = {
+    categoryId: number;
+};
+
+export type CategoriesReadCategoryResponse = (CategoryPublic);
+
+export type CategoriesUpdateCategoryData = {
+    categoryId: number;
+    requestBody: CategoryUpdate;
+};
+
+export type CategoriesUpdateCategoryResponse = (CategoryPublic);
+
+export type CategoriesDeleteCategoryData = {
+    categoryId: number;
+};
+
+export type CategoriesDeleteCategoryResponse = (void);

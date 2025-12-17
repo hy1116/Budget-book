@@ -5,6 +5,11 @@ from app.core.database import engine
 from app.core.config import settings
 from app.api.routes import api_router
 
+# Import all models to register them with SQLModel
+from app.models.user import User
+from app.models.category import Category
+from app.models.transaction import Transaction
+
 app = FastAPI(title="Budget Book API")
 
 # CORS middleware must be added before routers

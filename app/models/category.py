@@ -1,5 +1,5 @@
-from sqlmodel import Field, SQLModel
-from typing import Optional
+from sqlmodel import Field, Relationship, SQLModel
+from typing import List, Optional
 from app.models.base import Base
 
 # base schema
@@ -10,6 +10,9 @@ class CategoryBase(Base):
 # entity
 class Category(CategoryBase, table=True):
     __tablename__ = "categories"
+
+    # Relationship
+    transaction: List["Transaction"] = Relationship(back_populates="category")
 
 # schema
 class CategoryCreate(CategoryBase):

@@ -1,5 +1,6 @@
+from typing import List
 import uuid
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 from pydantic import EmailStr
 
 from app.models.base import Base
@@ -15,6 +16,9 @@ class User(UserBase, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     hashed_password: str = Field(max_length=255)
+
+    # Relationship
+    transactions: List["Transaction"] = Relationship(back_populates="user")
 
 class UserRegister(SQLModel): # 가입요청
     email: EmailStr = Field(max_length=255)

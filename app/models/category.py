@@ -1,11 +1,9 @@
 from sqlmodel import Field, SQLModel
 from typing import Optional
-from datetime import datetime
 from app.models.base import Base
 
 # base schema
 class CategoryBase(Base):    
-    id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(min_length=1, max_length=50, unique=True, index=True)
     description: str = Field(max_length=200)
 
@@ -21,7 +19,6 @@ class CategoryUpdate(SQLModel):
     name: Optional[str] = Field(None, min_length=1, max_length=50)
     description: Optional[str] = Field(None, max_length=200)
 
-class CategoryPublic(CategoryBase):
-    id: int
-    created_at: datetime
-    updated_at: Optional[datetime] = None
+class CategoryResponse(CategoryBase):
+    pass
+

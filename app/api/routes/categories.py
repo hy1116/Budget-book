@@ -30,7 +30,7 @@ def create_category(category: CategoryCreate, db: SessionDep):
     db.refresh(db_category)
     return db_category
 
-@router.put("/{category_id}", response_model=CategoryResponse)
+@router.patch("/{category_id}", response_model=CategoryResponse)
 def update_category(category_id: int, category: CategoryUpdate, db: SessionDep):
     """카테고리 수정"""
     db_category = db.get(Category, category_id)

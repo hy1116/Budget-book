@@ -33,7 +33,7 @@ def create_transaction(current_user: CurrentUser, session: SessionDep, transacti
     session.refresh(db_transaction)
     return db_transaction
 
-@router.put("/{transaction_id}", response_model=TransactionResponse)
+@router.patch("/{transaction_id}", response_model=TransactionResponse)
 def update_transaction(current_user: CurrentUser, session: SessionDep, transaction: TransactionUpdate, transaction_id: int):
     """거래내역 수정"""
     db_transaction = session.get(Transaction,transaction_id)

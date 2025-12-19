@@ -9,11 +9,13 @@ from app.models.base import Base
 if TYPE_CHECKING:
     from app.models.transaction import Transaction
 
-class UserBase(Base):
+class UserBase(SQLModel):
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     is_active: bool = True
     is_superuser: bool = False
     full_name: str | None = Field(default=None, max_length=255)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc).replace(microsecond=0))
+    updated_at: Optional[datetime] = Field(default_factory=lambda: datetime.now(timezone.utc).replace(microsecond=0))
 
 class User(UserBase, table=True):
     __tablename__ = "users"

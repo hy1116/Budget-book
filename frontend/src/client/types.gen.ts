@@ -9,30 +9,6 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
-export type CommentCreate = {
-    content: string;
-    item_id: string;
-};
-
-export type CommentPublic = {
-    content: string;
-    id: string;
-    created_at: string;
-    updated_at: string;
-    item_id: string;
-    author_id: string;
-    author_name?: (string | null);
-};
-
-export type CommentsPublic = {
-    data: Array<CommentPublic>;
-    count: number;
-};
-
-export type CommentUpdate = {
-    content: string;
-};
-
 export type CategoryCreate = {
     name: string;
     description: string;
@@ -51,33 +27,27 @@ export type CategoryUpdate = {
     description?: (string | null);
 };
 
+export type TransactionPublic = {
+    id: number;
+    amount: number;
+    description?: (string | null);
+    transaction_date: string;
+    transaction_type: string;
+    category_id: number;
+    payment_method?: (string| null);
+}
+
+export type TransactionCreate = {
+    amount: number;
+    description?: (string | null);
+    transaction_date: string;
+    transaction_type: string;
+    category_id: number;
+    payment_method?: (string| null);
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
-};
-
-export type ItemCreate = {
-    title: string;
-    description?: (string | null);
-    tags?: Array<(string)>;
-};
-
-export type ItemPublic = {
-    title: string;
-    description?: (string | null);
-    id: string;
-    owner_id: string;
-    tags?: Array<(string)>;
-};
-
-export type ItemsPublic = {
-    data: Array<ItemPublic>;
-    count: number;
-};
-
-export type ItemUpdate = {
-    title?: (string | null);
-    description?: (string | null);
-    tags?: Array<(string)>;
 };
 
 export type Message = {
@@ -190,71 +160,6 @@ export type AnalyticsTrackUserActivityData = {
 };
 
 export type AnalyticsTrackUserActivityResponse = (unknown);
-
-export type CommentsReadCommentsData = {
-    itemId?: (string | null);
-    limit?: number;
-    skip?: number;
-};
-
-export type CommentsReadCommentsResponse = (CommentsPublic);
-
-export type CommentsCreateCommentData = {
-    requestBody: CommentCreate;
-};
-
-export type CommentsCreateCommentResponse = (CommentPublic);
-
-export type CommentsReadCommentData = {
-    id: string;
-};
-
-export type CommentsReadCommentResponse = (CommentPublic);
-
-export type CommentsUpdateCommentData = {
-    id: string;
-    requestBody: CommentUpdate;
-};
-
-export type CommentsUpdateCommentResponse = (CommentPublic);
-
-export type CommentsDeleteCommentData = {
-    id: string;
-};
-
-export type CommentsDeleteCommentResponse = (Message);
-
-export type ItemsReadItemsData = {
-    limit?: number;
-    skip?: number;
-};
-
-export type ItemsReadItemsResponse = (ItemsPublic);
-
-export type ItemsCreateItemData = {
-    requestBody: ItemCreate;
-};
-
-export type ItemsCreateItemResponse = (ItemPublic);
-
-export type ItemsReadItemData = {
-    id: string;
-};
-
-export type ItemsReadItemResponse = (ItemPublic);
-
-export type ItemsUpdateItemData = {
-    id: string;
-    requestBody: ItemUpdate;
-};
-
-export type ItemsUpdateItemResponse = (ItemPublic);
-
-export type ItemsDeleteItemData = {
-    id: string;
-};
-
-export type ItemsDeleteItemResponse = (Message);
 
 export type LoginLoginAccessTokenData = {
     formData: Body_login_login_access_token;
@@ -381,3 +286,17 @@ export type CategoriesDeleteCategoryData = {
 };
 
 export type CategoriesDeleteCategoryResponse = (void);
+
+export type TransactionsReadTransactionsData = {
+    limit?: number;
+    skip?: number;
+};
+
+export type TransactionsReadTransactionsResonse = (Array<TransactionPublic>);
+
+
+export type TransactionsCreateTransactionsData = {
+    requestBody: TransactionCreate;
+};
+
+export type TransactionsCreateTransactionsResonse = (TransactionPublic);

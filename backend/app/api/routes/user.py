@@ -8,17 +8,17 @@ from sqlmodel import select
 from app.core.database import CurrentUser, SessionDep, get_current_active_superuser
 from app.core.security import get_password_hash, verify_password
 from app.models.base import Message
-from app.models.user import PasswordUpdate, User, UserCreate, UserRegister, UserResponse, UserUpdate
+from app.models.user import PasswordUpdate, User, UserCreate, UserRegister, UserPublic, UserUpdate
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 # me
-@router.get("/me",response_model=UserResponse)
+@router.get("/me",response_model=UserPublic)
 def get_user_me(current_user: CurrentUser) -> Any:
     """나의 계정 조회"""
     return current_user
 
-@router.patch("/me",response_model=UserResponse)
+@router.patch("/me",response_model=UserPublic)
 def update_user_me(session: SessionDep, user_in: UserUpdate, current_user: CurrentUser):
     """나의 계정 수정"""
     user_data = user_in.model_dump(exclude_unset=True)
@@ -52,7 +52,7 @@ def delete_user_me(current_user: CurrentUser, session: SessionDep) -> Any:
     return Message(message="User deleted successfully")
 
 # etc
-@router.post("/signup", response_model=UserResponse)
+@router.post("/signup", response_model=UserPublic)
 def register_user(user_in: UserRegister, session: SessionDep) -> Any:
     """회원가입"""
     statement = select(User).where(User.email == user_in.email)
@@ -67,12 +67,12 @@ def register_user(user_in: UserRegister, session: SessionDep) -> Any:
     return db_obj
 
 # user
-@router.get("/", response_model=List[UserResponse], dependencies=[Depends(get_current_active_superuser)])
+@router.get("/", response_model=List[UserPublic], dependencies=[Depends(get_current_active_superuser)])
 def get_user(session: SessionDep, skip: int=0, limit: int=100) -> Any:
     """사용자 리스트 조회"""
     return session.exec(select(User).offset(skip).limit(limit)).all()
 
-@router.get("/{user_id}", response_model=UserResponse)
+@router.get("/{user_id}", response_model=UserPublic)
 def get_user(session: SessionDep, user_id:uuid.UUID, current_user: CurrentUser) -> Any:
     """사용자 조회"""
     db_user = session.get(User,user_id)
@@ -80,7 +80,7 @@ def get_user(session: SessionDep, user_id:uuid.UUID, current_user: CurrentUser) 
         raise HTTPException(status_code=403, detail="not Authorized")
     return db_user
 
-@router.patch("/{user_id}", response_model=UserResponse, dependencies=[Depends(get_current_active_superuser)])
+@router.patch("/{user_id}", response_model=UserPublic, dependencies=[Depends(get_current_active_superuser)])
 def update_user(session: SessionDep, user_id: uuid.UUID, user_in: UserUpdate):
     """사용자 수정"""
     db_user = session.get(User, user_id)

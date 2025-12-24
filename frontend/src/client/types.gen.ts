@@ -15,7 +15,7 @@ export type CategoryCreate = {
 };
 
 export type CategoryResponse = {
-    id: number;
+    id?: number;
     created_at?: string;
     updated_at?: (string | null);
     name: string;
@@ -62,7 +62,7 @@ export type TransactionCreate = {
 };
 
 export type TransactionResponse = {
-    id: number;
+    id?: number;
     created_at?: string;
     updated_at?: (string | null);
     amount: number;
@@ -86,13 +86,7 @@ export type TransactionUpdate = {
     payment_method?: (PaymentMethod | null);
 };
 
-export type UserRegister = {
-    email: string;
-    password: string;
-    full_name?: (string | null);
-};
-
-export type UserResponse = {
+export type UserPublic = {
     email: string;
     is_active?: boolean;
     is_superuser?: boolean;
@@ -100,6 +94,12 @@ export type UserResponse = {
     created_at?: string;
     updated_at?: (string | null);
     id: string;
+};
+
+export type UserRegister = {
+    email: string;
+    password: string;
+    full_name?: (string | null);
 };
 
 export type UserUpdate = {
@@ -202,7 +202,7 @@ export type TransactionsDeleteTransactionData = {
 
 export type TransactionsDeleteTransactionResponse = (void);
 
-export type UsersGetUserMeResponse = (UserResponse);
+export type UsersGetUserMeResponse = (UserPublic);
 
 export type UsersDeleteUserMeResponse = (unknown);
 
@@ -210,7 +210,7 @@ export type UsersUpdateUserMeData = {
     requestBody: UserUpdate;
 };
 
-export type UsersUpdateUserMeResponse = (UserResponse);
+export type UsersUpdateUserMeResponse = (UserPublic);
 
 export type UsersUpdatePasswordMeData = {
     requestBody: PasswordUpdate;
@@ -222,27 +222,27 @@ export type UsersRegisterUserData = {
     requestBody: UserRegister;
 };
 
-export type UsersRegisterUserResponse = (UserResponse);
+export type UsersRegisterUserResponse = (UserPublic);
 
 export type UsersGetUserData = {
     limit?: number;
     skip?: number;
 };
 
-export type UsersGetUserResponse = (Array<UserResponse>);
+export type UsersGetUserResponse = (Array<UserPublic>);
 
 export type UsersGetUser1Data = {
     userId: string;
 };
 
-export type UsersGetUser1Response = (UserResponse);
+export type UsersGetUser1Response = (UserPublic);
 
 export type UsersUpdateUserData = {
     requestBody: UserUpdate;
     userId: string;
 };
 
-export type UsersUpdateUserResponse = (UserResponse);
+export type UsersUpdateUserResponse = (UserPublic);
 
 export type UsersDeleteUserData = {
     userId: string;

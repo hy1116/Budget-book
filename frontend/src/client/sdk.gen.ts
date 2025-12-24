@@ -328,7 +328,7 @@ export class UsersService {
     /**
      * Get User Me
      * 나의 계정 조회
-     * @returns UserResponse Successful Response
+     * @returns UserPublic Successful Response
      * @throws ApiError
      */
     public static getUserMe(): CancelablePromise<UsersGetUserMeResponse> {
@@ -356,7 +356,7 @@ export class UsersService {
      * 나의 계정 수정
      * @param data The data for the request.
      * @param data.requestBody
-     * @returns UserResponse Successful Response
+     * @returns UserPublic Successful Response
      * @throws ApiError
      */
     public static updateUserMe(data: UsersUpdateUserMeData): CancelablePromise<UsersUpdateUserMeResponse> {
@@ -396,7 +396,7 @@ export class UsersService {
      * 회원가입
      * @param data The data for the request.
      * @param data.requestBody
-     * @returns UserResponse Successful Response
+     * @returns UserPublic Successful Response
      * @throws ApiError
      */
     public static registerUser(data: UsersRegisterUserData): CancelablePromise<UsersRegisterUserResponse> {
@@ -417,7 +417,7 @@ export class UsersService {
      * @param data The data for the request.
      * @param data.skip
      * @param data.limit
-     * @returns UserResponse Successful Response
+     * @returns UserPublic Successful Response
      * @throws ApiError
      */
     public static getUser(data: UsersGetUserData = {}): CancelablePromise<UsersGetUserResponse> {
@@ -439,7 +439,7 @@ export class UsersService {
      * 사용자 조회
      * @param data The data for the request.
      * @param data.userId
-     * @returns UserResponse Successful Response
+     * @returns UserPublic Successful Response
      * @throws ApiError
      */
     public static getUser1(data: UsersGetUser1Data): CancelablePromise<UsersGetUser1Response> {
@@ -461,7 +461,7 @@ export class UsersService {
      * @param data The data for the request.
      * @param data.userId
      * @param data.requestBody
-     * @returns UserResponse Successful Response
+     * @returns UserPublic Successful Response
      * @throws ApiError
      */
     public static updateUser(data: UsersUpdateUserData): CancelablePromise<UsersUpdateUserResponse> {

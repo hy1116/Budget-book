@@ -1,11 +1,20 @@
-import { TransactionsService } from "@/client"
-import useCustomToast from "@/hooks/useCustomToast"
-import { DialogCloseTrigger, DialogContent, DialogRoot, DialogTrigger, DialogActionTrigger, DialogBody, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
+import { Button, DialogTitle, Text } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { FiTrash2 } from "react-icons/fi"
-import { Text, Button } from "@chakra-ui/react"
+import { TransactionsService } from "@/client"
+import useCustomToast from "@/hooks/useCustomToast"
+import {
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 const DeleteTransaction = ({ id }: { id: number }) => {
     const [isOpen, setIsOpen] = useState(false)

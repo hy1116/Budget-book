@@ -1,12 +1,12 @@
 import { IconButton } from "@chakra-ui/react"
 import { BsThreeDotsVertical } from "react-icons/bs"
-import type { CategoryPublic } from "@/client"
+import type { CategoryResponse } from "@/client"
 import DeleteCategory from "./DeleteCategory"
 import EditCategory from "./EditCategory"
 import { MenuContent, MenuRoot, MenuTrigger } from "../ui/menu"
 
 interface CategoryActionsMenuProps {
-  category: CategoryPublic
+  category: CategoryResponse
 }
 
 export const CategoryActionsMenu = ({ category }: CategoryActionsMenuProps) => {

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.routing import APIRoute
 from sqlmodel import SQLModel
 from app.core.database import engine
 from app.core.config import settings
@@ -10,7 +11,13 @@ from app.models.user import User
 from app.models.category import Category
 from app.models.transaction import Transaction
 
-app = FastAPI(title="Budget Book API")
+def custom_generate_unique_id(route: APIRoute) -> str:
+    return f"{route.tags[0]}-{route.name}" if route.tags else route.name
+
+app = FastAPI(
+    title="Budget Book API",
+    generate_unique_id_function=custom_generate_unique_id
+)
 
 # CORS middleware must be added before routers
 app.add_middleware(

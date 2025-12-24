@@ -11,9 +11,9 @@ import { createFileRoute } from "@tanstack/react-router"
 import { FiSearch } from "react-icons/fi"
 
 import { CategoriesService } from "@/client"
-import { CategoryActionsMenu } from "@/components/Categories/CategoryActionsMenu"
 import AddCategory from "@/components/Categories/AddCategory"
 import { Skeleton } from "@/components/ui/skeleton"
+import { CategoryActionsMenu } from "@/components/Categories/CategoryActionsMenu"
 
 export const Route = createFileRoute("/_layout/category")({
   component: Category,
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_layout/category")({
 function CategoryTable() {
   const { data, isLoading } = useQuery({
     queryKey: ["categories"],
-    queryFn: () => CategoriesService.readCategories(),
+    queryFn: () => CategoriesService.getCategories(),
   })
 
   const categories = data || []
@@ -73,7 +73,8 @@ function CategoryTable() {
               {category.description}
             </Table.Cell>
             <Table.Cell>
-              {new Date(category.created_at).toLocaleDateString()}
+              {category.created_at &&
+                new Date(category.created_at).toLocaleDateString()}
             </Table.Cell>
             <Table.Cell>
               <Flex gap={2}>

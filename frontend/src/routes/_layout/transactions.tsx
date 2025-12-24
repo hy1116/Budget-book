@@ -1,6 +1,7 @@
 import { TransactionsService } from '@/client'
 import AddTransaction from '@/components/Transactions/AddTransaction'
-import { Container, EmptyState, Heading, Table, VStack } from '@chakra-ui/react'
+import { TransactionActionsMenu } from '@/components/Transactions/TransactionActionMenu'
+import { Container, EmptyState, Flex, Heading, Table, VStack } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { FiSearch } from 'react-icons/fi'
@@ -9,6 +10,25 @@ export const Route = createFileRoute('/_layout/transactions')({
   component: Transactions,
 })
 
+// 거래 타입 한글 변환
+const getTransactionTypeLabel = (type: string) => {
+  const labels: { [key: string]: string } = {
+    income: '수입',
+    expense: '지출',
+  }
+  return labels[type] || type
+}
+
+// 결제 방법 한글 변환
+const getPaymentMethodLabel = (method: string | null | undefined) => {
+  if (!method) return '-'
+  const labels: { [key: string]: string } = {
+    cash: '현금',
+    card: '카드',
+  }
+  return labels[method] || method
+}
+
 function Transactions() {
   return (
     <Container maxW="full">
@@ -16,14 +36,14 @@ function Transactions() {
         Transaction Management
       </Heading>
       <AddTransaction />
-      <TransactionTable />      
+      <TransactionTable />
     </Container>
   )
 
   function TransactionTable() {
     const { data, isLoading } = useQuery({
       queryKey: ["transactions"],
-      queryFn: () => TransactionsService.readTransactions(),
+      queryFn: () => TransactionsService.getTransactions(),
     })
 
     const transactions = data || []
@@ -60,17 +80,23 @@ function Transactions() {
             <Table.ColumnHeader>Amount</Table.ColumnHeader>
             <Table.ColumnHeader>Description</Table.ColumnHeader>
             <Table.ColumnHeader>payment_method</Table.ColumnHeader>
+            <Table.ColumnHeader>Actions</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {transactions.map((t) => (
             <Table.Row key={t.id}>
               <Table.Cell>{new Date(t.transaction_date).toLocaleDateString()}</Table.Cell>
-              <Table.Cell>{t.transaction_type}</Table.Cell>
-              <Table.Cell>{t.category_id}</Table.Cell>
-              <Table.Cell>{t.amount}</Table.Cell>
-              <Table.Cell truncate maxW="30%">{t.description}</Table.Cell>
-              <Table.Cell>{t.payment_method}</Table.Cell>
+              <Table.Cell>{getTransactionTypeLabel(t.transaction_type)}</Table.Cell>
+              <Table.Cell>{t.category?.name || '-'}</Table.Cell>
+              <Table.Cell>{t.amount.toLocaleString()}원</Table.Cell>
+              <Table.Cell truncate maxW="30%">{t.description || '-'}</Table.Cell>
+              <Table.Cell>{getPaymentMethodLabel(t.payment_method)}</Table.Cell>
+              <Table.Cell>
+                <Flex gap={2}>
+                  <TransactionActionsMenu transaction={t} />
+                </Flex>
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

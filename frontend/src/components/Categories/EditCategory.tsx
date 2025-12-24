@@ -12,7 +12,7 @@ import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { FaExchangeAlt } from "react-icons/fa"
 
-import { type ApiError, type CategoryPublic, CategoriesService } from "@/client"
+import { type ApiError, type CategoryResponse, CategoriesService } from "@/client"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 import {
@@ -28,7 +28,7 @@ import {
 import { Field } from "../ui/field"
 
 interface EditCategoryProps {
-  category: CategoryPublic
+  category: CategoryResponse
 }
 
 interface CategoryUpdateForm {

@@ -17,7 +17,7 @@ class PaymentMethod(str, Enum):
     CARD = "card"
 
 # Base Schema
-class TransactionBase(Base):
+class TransactionBase(SQLModel):
     amount: int
     description: Optional[str] = None
     transaction_date: datetime
@@ -26,7 +26,7 @@ class TransactionBase(Base):
     payment_method: Optional[PaymentMethod] = None
 
 # Entiry
-class Transaction(TransactionBase, table=True):
+class Transaction(TransactionBase, Base, table=True):
     __tablename__ = "transactions"
 
     user_id: uuid.UUID = Field(foreign_key="users.id")
@@ -49,6 +49,9 @@ class TransactionUpdate(SQLModel):
     category_id: Optional[int] = None
     payment_method: Optional[PaymentMethod] = None
 
-class TransactionResponse(TransactionBase):
-    id: int
+class TransactionResponse(TransactionBase, Base):
     user_id: uuid.UUID
+    category: Optional["CategoryResponse"] = None
+
+# Import after class definition to avoid circular import
+from app.models.category import CategoryResponse

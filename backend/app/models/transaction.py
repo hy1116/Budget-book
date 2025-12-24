@@ -56,5 +56,9 @@ class TransactionResponse(TransactionBase):
     user_id: uuid.UUID
     category: Optional["CategoryResponse"] = None
 
+class TransactionPaginatedResponse(SQLModel):
+    items: list[TransactionResponse]
+    total: int
+
 # Import after class definition to avoid circular import
 from app.models.category import CategoryResponse

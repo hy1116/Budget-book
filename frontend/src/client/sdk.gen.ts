@@ -220,7 +220,7 @@ export class TransactionsService {
      * @param data The data for the request.
      * @param data.skip
      * @param data.limit
-     * @returns TransactionResponse Successful Response
+     * @returns TransactionPaginatedResponse Successful Response
      * @throws ApiError
      */
     public static getTransactions(data: TransactionsGetTransactionsData = {}): CancelablePromise<TransactionsGetTransactionsResponse> {

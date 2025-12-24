@@ -25,12 +25,12 @@ const DeleteTransaction = ({ id }: { id: number }) => {
         formState: { isSubmitting },
     } = useForm()
 
-    const DeleteTransaction = async (id: number) => {
+    const deleteTransactionFn  = async (id: number) => {
         await TransactionsService.deleteTransaction({ transactionId: id })
     }
 
     const mutation = useMutation({
-        mutationFn: DeleteTransaction,
+        mutationFn: deleteTransactionFn ,
         onSuccess: () => {
             showSuccessToast("The transation was deleted suecessfully")
             setIsOpen(false)
@@ -64,11 +64,10 @@ const DeleteTransaction = ({ id }: { id: number }) => {
 
             <DialogContent>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <DialogCloseTrigger asChild>
-                        <DialogHeader>
-                            <DialogTitle>Delete Transactopn</DialogTitle>
-                        </DialogHeader>
-                    </DialogCloseTrigger>
+                    <DialogCloseTrigger />
+                    <DialogHeader>
+                        <DialogTitle>Delete Transactopn</DialogTitle>
+                    </DialogHeader>
                     <DialogBody>
                         <Text mb={4}>
                             This category will be permanently deleted. Are you sure? You will not
@@ -84,15 +83,15 @@ const DeleteTransaction = ({ id }: { id: number }) => {
                             >
                                 Cancle
                             </Button>
-                            <Button
-                                variant="solid"
-                                colorPalette={"red"}
-                                type="submit"
-                                loading={isSubmitting}
-                            >
-                                Delete
-                            </Button>
                         </DialogActionTrigger>
+                        <Button
+                            variant="solid"
+                            colorPalette={"red"}
+                            type="submit"
+                            loading={isSubmitting}
+                        >
+                            Delete
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

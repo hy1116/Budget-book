@@ -1,18 +1,24 @@
 from typing import List
 from fastapi import APIRouter, HTTPException
-from sqlmodel import select
+from sqlmodel import select, func
 from sqlalchemy.orm import selectinload
 from app.core.database import CurrentUser, SessionDep
-from app.models.transaction import Transaction, TransactionCreate, TransactionResponse, TransactionUpdate
+from app.models.transaction import Transaction, TransactionCreate, TransactionResponse, TransactionUpdate, TransactionPaginatedResponse
 
 router = APIRouter(prefix="/transactions",tags=["transactions"])
 
-@router.get("/", response_model=List[TransactionResponse])
+@router.get("/", response_model=TransactionPaginatedResponse)
 def get_transactions(current_user: CurrentUser, session: SessionDep, skip: int = 0, limit: int = 100):
     """전체 거래내역 조회"""
-    statement = select(Transaction).where(Transaction.user_id == current_user.id).options(selectinload(Transaction.category)).offset(skip).limit(limit)
+    # Get total count
+    count_statement = select(func.count()).select_from(Transaction).where(Transaction.user_id == current_user.id)
+    total = session.exec(count_statement).one()
+
+    # Get paginated items
+    statement = select(Transaction).where(Transaction.user_id == current_user.id).options(selectinload(Transaction.category)).order_by(Transaction.transaction_date.desc()).offset(skip).limit(limit)
     transactions = session.exec(statement).all()
-    return transactions
+
+    return TransactionPaginatedResponse(items=transactions, total=total)
 
 @router.get("/{transaction_id}", response_model=TransactionResponse)
 def get_transaction(current_user: CurrentUser, session: SessionDep, transaction_id: int):

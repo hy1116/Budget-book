@@ -4,7 +4,7 @@ import { DialogCloseTrigger, DialogContent, DialogRoot, DialogTrigger, DialogAct
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { FiTrash2 } from "react-icons/fi"
+import { FiEdit2 } from "react-icons/fi"
 import { Text, Button, VStack, Input, Select, createListCollection, Textarea } from "@chakra-ui/react"
 import { handleError } from "@/utils"
 import { Field } from "../ui/field"
@@ -58,7 +58,7 @@ const EditTransaction = ({ transaction }: EditTransactionProps ) => {
         defaultValues: {
             amount: transaction.amount,
             description: transaction.description,
-            transaction_date: transaction.transaction_date,
+            transaction_date: new Date(transaction.transaction_date).toISOString().split('T')[0],
             transaction_type: transaction.transaction_type,
             category_id: transaction.category_id,
             payment_method: transaction.payment_method,
@@ -98,7 +98,7 @@ const EditTransaction = ({ transaction }: EditTransactionProps ) => {
         >
             <DialogTrigger asChild>
                 <Button variant={"ghost"} size="sm">
-                    <FiTrash2 fontSize="16px" />
+                    <FiEdit2 fontSize="16px" />
                     Edit Transaction
                 </Button>
             </DialogTrigger>
@@ -135,7 +135,7 @@ const EditTransaction = ({ transaction }: EditTransactionProps ) => {
                         >
                         <Select.Root
                             collection={transactionTypes}
-                            defaultValue={["expense"]}
+                            defaultValue={[transaction.transaction_type]}
                             onValueChange={(e) => setValue("transaction_type", (e.value[0] as TransactionType) || null)}
                             positioning={{ sameWidth: true }}
                         >
@@ -169,6 +169,7 @@ const EditTransaction = ({ transaction }: EditTransactionProps ) => {
                         >
                         <Select.Root
                             collection={categoriesCollection}
+                            defaultValue={[transaction.category_id.toString()]}
                             onValueChange={(e) => setValue("category_id", parseInt(e.value[0]))}
                             disabled={categoriesLoading}
                             positioning={{ sameWidth: true }}
@@ -217,7 +218,7 @@ const EditTransaction = ({ transaction }: EditTransactionProps ) => {
                         >
                         <Select.Root
                             collection={paymentMethods}
-                            defaultValue={["cash"]}
+                            defaultValue={transaction.payment_method ? [transaction.payment_method] : []}
                             onValueChange={(e) => setValue("payment_method", (e.value[0] as PaymentMethod) || null)}
                             positioning={{ sameWidth: true }}
                         >

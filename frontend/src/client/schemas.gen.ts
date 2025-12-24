@@ -280,6 +280,25 @@ export const TransactionCreateSchema = {
     title: 'TransactionCreate'
 } as const;
 
+export const TransactionPaginatedResponseSchema = {
+    properties: {
+        items: {
+            items: {
+                '$ref': '#/components/schemas/TransactionResponse'
+            },
+            type: 'array',
+            title: 'Items'
+        },
+        total: {
+            type: 'integer',
+            title: 'Total'
+        }
+    },
+    type: 'object',
+    required: ['items', 'total'],
+    title: 'TransactionPaginatedResponse'
+} as const;
+
 export const TransactionResponseSchema = {
     properties: {
         amount: {

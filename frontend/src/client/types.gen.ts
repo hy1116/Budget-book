@@ -61,6 +61,11 @@ export type TransactionCreate = {
     payment_method?: (PaymentMethod | null);
 };
 
+export type TransactionPaginatedResponse = {
+    items: Array<TransactionResponse>;
+    total: number;
+};
+
 export type TransactionResponse = {
     amount: number;
     description?: (string | null);
@@ -175,7 +180,7 @@ export type TransactionsGetTransactionsData = {
     skip?: number;
 };
 
-export type TransactionsGetTransactionsResponse = (Array<TransactionResponse>);
+export type TransactionsGetTransactionsResponse = (TransactionPaginatedResponse);
 
 export type TransactionsCreateTransactionData = {
     requestBody: TransactionCreate;

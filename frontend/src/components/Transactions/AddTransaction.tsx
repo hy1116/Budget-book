@@ -54,13 +54,13 @@ const AddTransaction = () =>{
     const { showSuccessToast } = useCustomToast()
 
     // Categories 조회
-    const { data: categories, isLoading: categoriesLoading } = useQuery({
+    const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
       queryKey: ["categories"],
-      queryFn: () => CategoriesService.getCategories({}),
+      queryFn: () => CategoriesService.getCategories({ skip: 0, limit: 100 }),
     })
 
     const categoriesCollection = createListCollection({
-      items: categories?.map((cat) => ({
+      items: categoriesData?.items?.map((cat) => ({
         label: cat.name,
         value: cat.id.toString(),
       })) || [],

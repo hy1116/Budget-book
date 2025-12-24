@@ -76,6 +76,25 @@ export const CategoryCreateSchema = {
     title: 'CategoryCreate'
 } as const;
 
+export const CategoryPaginatedResponseSchema = {
+    properties: {
+        items: {
+            items: {
+                '$ref': '#/components/schemas/CategoryResponse'
+            },
+            type: 'array',
+            title: 'Items'
+        },
+        total: {
+            type: 'integer',
+            title: 'Total'
+        }
+    },
+    type: 'object',
+    required: ['items', 'total'],
+    title: 'CategoryPaginatedResponse'
+} as const;
+
 export const CategoryResponseSchema = {
     properties: {
         name: {

@@ -12,7 +12,7 @@ export class CategoriesService {
      * @param data The data for the request.
      * @param data.skip
      * @param data.limit
-     * @returns CategoryResponse Successful Response
+     * @returns CategoryPaginatedResponse Successful Response
      * @throws ApiError
      */
     public static getCategories(data: CategoriesGetCategoriesData = {}): CancelablePromise<CategoriesGetCategoriesResponse> {

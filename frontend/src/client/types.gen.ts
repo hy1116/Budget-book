@@ -14,6 +14,11 @@ export type CategoryCreate = {
     description: string;
 };
 
+export type CategoryPaginatedResponse = {
+    items: Array<CategoryResponse>;
+    total: number;
+};
+
 export type CategoryResponse = {
     name: string;
     description: string;
@@ -122,7 +127,7 @@ export type CategoriesGetCategoriesData = {
     skip?: number;
 };
 
-export type CategoriesGetCategoriesResponse = (Array<CategoryResponse>);
+export type CategoriesGetCategoriesResponse = (CategoryPaginatedResponse);
 
 export type CategoriesCreateCategoryData = {
     requestBody: CategoryCreate;

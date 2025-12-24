@@ -7,25 +7,58 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { FiSearch } from "react-icons/fi"
+import { z } from "zod"
 
 import { CategoriesService } from "@/client"
 import AddCategory from "@/components/Categories/AddCategory"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CategoryActionsMenu } from "@/components/Categories/CategoryActionsMenu"
+import {
+  PaginationItems,
+  PaginationNextTrigger,
+  PaginationPrevTrigger,
+  PaginationRoot,
+} from "@/components/ui/pagination.tsx"
+
+const categoriesSearchSchema = z.object({
+  page: z.number().catch(1),
+})
+
+const PER_PAGE = 10
+
+function getCategoriesQueryOptions({ page }: { page: number }) {
+  return {
+    queryFn: () =>
+      CategoriesService.getCategories({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+    queryKey: ["categories", { page }],
+  }
+}
 
 export const Route = createFileRoute("/_layout/category")({
   component: Category,
+  validateSearch: (search) => categoriesSearchSchema.parse(search),
 })
 
 function CategoryTable() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => CategoriesService.getCategories(),
+  const navigate = useNavigate({ from: Route.fullPath })
+  const { page = 1 } = Route.useSearch()
+
+  const { data, isLoading, isPlaceholderData } = useQuery({
+    ...getCategoriesQueryOptions({ page }),
+    placeholderData: (prevData) => prevData,
   })
 
-  const categories = data || []
+  const setPage = (page: number) => {
+    navigate({
+      to: "/category",
+      search: (prev) => ({ ...prev, page }),
+    })
+  }
+
+  const categories = data?.items ?? []
+  const count = data?.total ?? 0
 
   if (isLoading) {
     return (
@@ -56,35 +89,51 @@ function CategoryTable() {
   }
 
   return (
-    <Table.Root size={{ base: "sm", md: "md" }}>
-      <Table.Header>
-        <Table.Row>
-          <Table.ColumnHeader>Name</Table.ColumnHeader>
-          <Table.ColumnHeader>Description</Table.ColumnHeader>
-          <Table.ColumnHeader>Created At</Table.ColumnHeader>
-          <Table.ColumnHeader>Actions</Table.ColumnHeader>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {categories.map((category) => (
-          <Table.Row key={category.id}>
-            <Table.Cell>{category.name}</Table.Cell>
-            <Table.Cell truncate maxW="30%">
-              {category.description}
-            </Table.Cell>
-            <Table.Cell>
-              {category.created_at &&
-                new Date(category.created_at).toLocaleDateString()}
-            </Table.Cell>
-            <Table.Cell>
-              <Flex gap={2}>
-                <CategoryActionsMenu category={category} />
-              </Flex>
-            </Table.Cell>
+    <>
+      <Table.Root size={{ base: "sm", md: "md" }}>
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeader>Name</Table.ColumnHeader>
+            <Table.ColumnHeader>Description</Table.ColumnHeader>
+            <Table.ColumnHeader>Created At</Table.ColumnHeader>
+            <Table.ColumnHeader>Actions</Table.ColumnHeader>
           </Table.Row>
-        ))}
-      </Table.Body>
-    </Table.Root>
+        </Table.Header>
+        <Table.Body>
+          {categories.map((category) => (
+            <Table.Row key={category.id} opacity={isPlaceholderData ? 0.5 : 1}>
+              <Table.Cell>{category.name}</Table.Cell>
+              <Table.Cell truncate maxW="30%">
+                {category.description}
+              </Table.Cell>
+              <Table.Cell>
+                {category.created_at &&
+                  new Date(category.created_at).toLocaleDateString()}
+              </Table.Cell>
+              <Table.Cell>
+                <Flex gap={2}>
+                  <CategoryActionsMenu category={category} />
+                </Flex>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table.Root>
+      <Flex justifyContent="flex-end" mt={4}>
+        <PaginationRoot
+          count={count}
+          pageSize={PER_PAGE}
+          page={page}
+          onPageChange={({ page }) => setPage(page)}
+        >
+          <Flex>
+            <PaginationPrevTrigger />
+            <PaginationItems />
+            <PaginationNextTrigger />
+          </Flex>
+        </PaginationRoot>
+      </Flex>
+    </>
   )
 }
 

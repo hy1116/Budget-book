@@ -28,3 +28,7 @@ class CategoryResponse(CategoryBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
 
+class CategoryPaginatedResponse(SQLModel):
+    items: list[CategoryResponse]
+    total: int
+

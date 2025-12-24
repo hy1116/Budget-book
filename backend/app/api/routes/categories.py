@@ -1,17 +1,23 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 from typing import List
 from app.core.database import SessionDep, get_db
-from app.models.category import Category, CategoryCreate, CategoryUpdate, CategoryResponse
+from app.models.category import Category, CategoryCreate, CategoryUpdate, CategoryResponse, CategoryPaginatedResponse
 
 router = APIRouter(prefix="/categories", tags=["categories"])
 
-@router.get("/", response_model=List[CategoryResponse])
+@router.get("/", response_model=CategoryPaginatedResponse)
 def get_categories(db: SessionDep, skip: int = 0, limit: int = 100):
     """전체 카테고리 조회"""
+    # Get total count
+    count_statement = select(func.count()).select_from(Category)
+    total = db.exec(count_statement).one()
+
+    # Get paginated items
     statement = select(Category).offset(skip).limit(limit)
     categories = db.exec(statement).all()
-    return categories
+
+    return CategoryPaginatedResponse(items=categories, total=total)
 
 @router.get("/{category_id}", response_model=CategoryResponse)
 def get_category(category_id: int, db: SessionDep):

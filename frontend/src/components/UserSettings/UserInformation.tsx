@@ -15,7 +15,7 @@ import {
   type ApiError,
   type UserPublic,
   UsersService,
-  type UserUpdateMe,
+  type UserUpdate,
 } from "@/client"
 import useAuth from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
@@ -47,7 +47,7 @@ const UserInformation = () => {
   }
 
   const mutation = useMutation({
-    mutationFn: (data: UserUpdateMe) =>
+    mutationFn: (data: UserUpdate) =>
       UsersService.updateUserMe({ requestBody: data }),
     onSuccess: () => {
       showSuccessToast("User updated successfully.")
@@ -60,7 +60,7 @@ const UserInformation = () => {
     },
   })
 
-  const onSubmit: SubmitHandler<UserUpdateMe> = async (data) => {
+  const onSubmit: SubmitHandler<UserUpdate> = async (data) => {
     mutation.mutate(data)
   }
 

@@ -15,11 +15,11 @@ export type CategoryCreate = {
 };
 
 export type CategoryResponse = {
-    id?: number;
-    created_at?: string;
-    updated_at?: (string | null);
     name: string;
     description: string;
+    id: number;
+    created_at: string;
+    updated_at?: (string | null);
 };
 
 export type CategoryUpdate = {
@@ -62,15 +62,15 @@ export type TransactionCreate = {
 };
 
 export type TransactionResponse = {
-    id?: number;
-    created_at?: string;
-    updated_at?: (string | null);
     amount: number;
     description?: (string | null);
     transaction_date: string;
     transaction_type: TransactionType;
     category_id: number;
     payment_method?: (PaymentMethod | null);
+    id: number;
+    created_at: string;
+    updated_at?: (string | null);
     user_id: string;
     category?: (CategoryResponse | null);
 };

@@ -78,6 +78,17 @@ export const CategoryCreateSchema = {
 
 export const CategoryResponseSchema = {
     properties: {
+        name: {
+            type: 'string',
+            maxLength: 50,
+            minLength: 1,
+            title: 'Name'
+        },
+        description: {
+            type: 'string',
+            maxLength: 200,
+            title: 'Description'
+        },
         id: {
             type: 'integer',
             title: 'Id'
@@ -98,21 +109,10 @@ export const CategoryResponseSchema = {
                 }
             ],
             title: 'Updated At'
-        },
-        name: {
-            type: 'string',
-            maxLength: 50,
-            minLength: 1,
-            title: 'Name'
-        },
-        description: {
-            type: 'string',
-            maxLength: 200,
-            title: 'Description'
         }
     },
     type: 'object',
-    required: ['name', 'description'],
+    required: ['name', 'description', 'id', 'created_at'],
     title: 'CategoryResponse'
 } as const;
 
@@ -282,27 +282,6 @@ export const TransactionCreateSchema = {
 
 export const TransactionResponseSchema = {
     properties: {
-        id: {
-            type: 'integer',
-            title: 'Id'
-        },
-        created_at: {
-            type: 'string',
-            format: 'date-time',
-            title: 'Created At'
-        },
-        updated_at: {
-            anyOf: [
-                {
-                    type: 'string',
-                    format: 'date-time'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Updated At'
-        },
         amount: {
             type: 'integer',
             title: 'Amount'
@@ -340,6 +319,27 @@ export const TransactionResponseSchema = {
                 }
             ]
         },
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Updated At'
+        },
         user_id: {
             type: 'string',
             format: 'uuid',
@@ -357,7 +357,7 @@ export const TransactionResponseSchema = {
         }
     },
     type: 'object',
-    required: ['amount', 'transaction_date', 'transaction_type', 'category_id', 'user_id'],
+    required: ['amount', 'transaction_date', 'transaction_type', 'category_id', 'id', 'created_at', 'user_id'],
     title: 'TransactionResponse'
 } as const;
 

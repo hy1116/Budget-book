@@ -23,7 +23,7 @@ const PER_PAGE = 5
 function getUsersQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      UsersService.readUsers({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+      UsersService.getUser({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
     queryKey: ["users", { page }],
   }
 }
@@ -51,8 +51,8 @@ function UsersTable() {
     })
   }
 
-  const users = data?.data.slice(0, PER_PAGE) ?? []
-  const count = data?.count ?? 0
+  const users = data?.slice(0, PER_PAGE) ?? []
+  const count = data?.length ?? 0
 
   if (isLoading) {
     return <PendingUsers />
@@ -71,7 +71,7 @@ function UsersTable() {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {users?.map((user) => (
+          {users?.map((user: UserPublic) => (
             <Table.Row key={user.id} opacity={isPlaceholderData ? 0.5 : 1}>
               <Table.Cell color={!user.full_name ? "gray" : "inherit"}>
                 {user.full_name || "N/A"}

@@ -1,12 +1,12 @@
 import { IconButton } from "@chakra-ui/react"
 import { BsThreeDotsVertical } from "react-icons/bs"
-import type { TransactionPublic } from "@/client"
+import type { TransactionResponse } from "@/client"
 import { MenuContent, MenuRoot, MenuTrigger } from "../ui/menu"
 import DeleteTransaction from "./DeleteTransaction"
 import EditTransaction from "./EditTransaction"
 
 interface TransactionActionsMenuProps {
-  transaction: TransactionPublic
+  transaction: TransactionResponse
 }
 
 export const TransactionActionsMenu = ({ transaction }: TransactionActionsMenuProps) => {

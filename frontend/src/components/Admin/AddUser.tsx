@@ -2,20 +2,18 @@ import {
   Button,
   DialogActionTrigger,
   DialogTitle,
-  Flex,
   Input,
   Text,
   VStack,
 } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { Controller, type SubmitHandler, useForm } from "react-hook-form"
+import { type SubmitHandler, useForm } from "react-hook-form"
 import { FaPlus } from "react-icons/fa"
-import { type UserCreate, UsersService } from "@/client"
+import { type UserRegister, UsersService } from "@/client"
 import type { ApiError } from "@/client/core/ApiError"
 import useCustomToast from "@/hooks/useCustomToast"
 import { emailPattern, handleError } from "@/utils"
-import { Checkbox } from "../ui/checkbox"
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -27,7 +25,7 @@ import {
 } from "../ui/dialog"
 import { Field } from "../ui/field"
 
-interface UserCreateForm extends UserCreate {
+interface UserCreateForm extends UserRegister {
   confirm_password: string
 }
 
@@ -36,7 +34,6 @@ const AddUser = () => {
   const queryClient = useQueryClient()
   const { showSuccessToast } = useCustomToast()
   const {
-    control,
     register,
     handleSubmit,
     reset,
@@ -50,14 +47,12 @@ const AddUser = () => {
       full_name: "",
       password: "",
       confirm_password: "",
-      is_superuser: false,
-      is_active: false,
     },
   })
 
   const mutation = useMutation({
-    mutationFn: (data: UserCreate) =>
-      UsersService.createUser({ requestBody: data }),
+    mutationFn: (data: UserRegister) =>
+      UsersService.registerUser({ requestBody: data }),
     onSuccess: () => {
       showSuccessToast("User created successfully.")
       reset()
@@ -163,37 +158,6 @@ const AddUser = () => {
                 />
               </Field>
             </VStack>
-
-            <Flex mt={4} direction="column" gap={4}>
-              <Controller
-                control={control}
-                name="is_superuser"
-                render={({ field }) => (
-                  <Field disabled={field.disabled} colorPalette="teal">
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={({ checked }) => field.onChange(checked)}
-                    >
-                      Is superuser?
-                    </Checkbox>
-                  </Field>
-                )}
-              />
-              <Controller
-                control={control}
-                name="is_active"
-                render={({ field }) => (
-                  <Field disabled={field.disabled} colorPalette="teal">
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={({ checked }) => field.onChange(checked)}
-                    >
-                      Is active?
-                    </Checkbox>
-                  </Field>
-                )}
-              />
-            </Flex>
           </DialogBody>
 
           <DialogFooter gap={2}>

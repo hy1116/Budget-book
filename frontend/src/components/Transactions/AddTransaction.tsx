@@ -151,7 +151,7 @@ const AddTransaction = () =>{
                 <Select.Root
                   collection={transactionTypes}
                   defaultValue={["expense"]}
-                  onValueChange={(e) => setValue("transaction_type", e.value[0] as "income" | "expense")}
+                  onValueChange={(e) => setValue("transaction_type", e.value[0] as TransactionCreate["transaction_type"])}
                   positioning={{ sameWidth: true }}
                 >
                   <Select.HiddenSelect />
@@ -233,7 +233,7 @@ const AddTransaction = () =>{
                 <Select.Root
                   collection={paymentMethods}
                   defaultValue={["cash"]}
-                  onValueChange={(e) => setValue("payment_method", (e.value[0] as "cash" | "card") || null)}
+                  onValueChange={(e) => setValue("payment_method", (e.value[0] as TransactionCreate["payment_method"]) || null)}
                   positioning={{ sameWidth: true }}
                 >
                   <Select.HiddenSelect />

@@ -1,4 +1,4 @@
-import { ApiError, CategoriesService, TransactionResponse, TransactionsService, TransactionUpdate } from "@/client"
+import { ApiError, CategoriesService, TransactionResponse, TransactionsService, TransactionUpdate, TransactionType, PaymentMethod } from "@/client"
 import useCustomToast from "@/hooks/useCustomToast"
 import { DialogCloseTrigger, DialogContent, DialogRoot, DialogTrigger, DialogActionTrigger, DialogBody, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -136,7 +136,7 @@ const EditTransaction = ({ transaction }: EditTransactionProps ) => {
                         <Select.Root
                             collection={transactionTypes}
                             defaultValue={["expense"]}
-                            onValueChange={(e) => setValue("transaction_type", e.value[0] as "income" | "expense")}
+                            onValueChange={(e) => setValue("transaction_type", (e.value[0] as TransactionType) || null)}
                             positioning={{ sameWidth: true }}
                         >
                             <Select.HiddenSelect />
@@ -218,7 +218,7 @@ const EditTransaction = ({ transaction }: EditTransactionProps ) => {
                         <Select.Root
                             collection={paymentMethods}
                             defaultValue={["cash"]}
-                            onValueChange={(e) => setValue("payment_method", (e.value[0] as "cash" | "card") || null)}
+                            onValueChange={(e) => setValue("payment_method", (e.value[0] as PaymentMethod) || null)}
                             positioning={{ sameWidth: true }}
                         >
                             <Select.HiddenSelect />

@@ -37,7 +37,7 @@ function RecoverPassword() {
   const { showSuccessToast } = useCustomToast()
 
   const recoverPassword = async (data: FormData) => {
-    await LoginService.recoverPassword({
+    await LoginService.passwordRecovery({
       email: data.email,
     })
   }

@@ -49,7 +49,10 @@ class TransactionUpdate(SQLModel):
     category_id: Optional[int] = None
     payment_method: Optional[PaymentMethod] = None
 
-class TransactionResponse(TransactionBase, Base):
+class TransactionResponse(TransactionBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
     user_id: uuid.UUID
     category: Optional["CategoryResponse"] = None
 

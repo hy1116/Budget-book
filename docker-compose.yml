@@ -26,14 +26,17 @@ services:
     container_name: budget-book-backend
     env_file:
       - ./backend/.env
+    environment:
+      DATABASE_HOST: db  # Docker에서는 서비스 이름 사용
     ports:
       - "8000:8000"
+      - "5678:5678"  # debugpy 포트
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - ./backend/app:/app/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: python -m debugpy --listen 0.0.0.0:5678 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build:

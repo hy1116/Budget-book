@@ -12,7 +12,11 @@ class Settings(BaseSettings):
     API_V1_STR: str
 
     # 데이터베이스 설정
-    DATABASE_URL: str
+    DATABASE_HOST: str = "localhost"
+    DATABASE_PORT: int = 5432
+    DATABASE_USER: str = "postgres"
+    DATABASE_PASSWORD: str
+    DATABASE_NAME: str = "budget_book"
 
     # 보안 설정
     SECRET_KEY: str
@@ -38,6 +42,11 @@ class Settings(BaseSettings):
             self.EMAILS_FROM_NAME = self.PROJECT_NAME
         return self
     
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def DATABASE_URL(self) -> str:
+        return f"postgresql://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
+
     @computed_field  # type: ignore[prop-decorator]
     @property
     def emails_enabled(self) -> bool:

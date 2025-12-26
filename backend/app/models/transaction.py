@@ -60,5 +60,18 @@ class TransactionPaginatedResponse(SQLModel):
     items: list[TransactionResponse]
     total: int
 
+class CategorySpending(SQLModel):
+    category_id: int
+    category_name: str
+    total_amount: int
+    transaction_count: int
+
+class MonthlyTrend(SQLModel):
+    year: int
+    month: int
+    income: int
+    expense: int
+    net: int  # income - expense
+
 # Import after class definition to avoid circular import
 from app.models.category import CategoryResponse

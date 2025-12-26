@@ -135,6 +135,30 @@ export const CategoryResponseSchema = {
     title: 'CategoryResponse'
 } as const;
 
+export const CategorySpendingSchema = {
+    properties: {
+        category_id: {
+            type: 'integer',
+            title: 'Category Id'
+        },
+        category_name: {
+            type: 'string',
+            title: 'Category Name'
+        },
+        total_amount: {
+            type: 'integer',
+            title: 'Total Amount'
+        },
+        transaction_count: {
+            type: 'integer',
+            title: 'Transaction Count'
+        }
+    },
+    type: 'object',
+    required: ['category_id', 'category_name', 'total_amount', 'transaction_count'],
+    title: 'CategorySpending'
+} as const;
+
 export const CategoryUpdateSchema = {
     properties: {
         name: {
@@ -191,6 +215,34 @@ export const MessageSchema = {
     type: 'object',
     required: ['message'],
     title: 'Message'
+} as const;
+
+export const MonthlyTrendSchema = {
+    properties: {
+        year: {
+            type: 'integer',
+            title: 'Year'
+        },
+        month: {
+            type: 'integer',
+            title: 'Month'
+        },
+        income: {
+            type: 'integer',
+            title: 'Income'
+        },
+        expense: {
+            type: 'integer',
+            title: 'Expense'
+        },
+        net: {
+            type: 'integer',
+            title: 'Net'
+        }
+    },
+    type: 'object',
+    required: ['year', 'month', 'income', 'expense', 'net'],
+    title: 'MonthlyTrend'
 } as const;
 
 export const NewPasswordSchema = {

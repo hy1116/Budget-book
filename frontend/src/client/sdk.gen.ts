@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CategoriesGetCategoriesData, CategoriesGetCategoriesResponse, CategoriesCreateCategoryData, CategoriesCreateCategoryResponse, CategoriesGetCategoryData, CategoriesGetCategoryResponse, CategoriesUpdateCategoryData, CategoriesUpdateCategoryResponse, CategoriesDeleteCategoryData, CategoriesDeleteCategoryResponse, ReadRootResponse, LoginGetAccessTokenData, LoginGetAccessTokenResponse, LoginPasswordRecoveryData, LoginPasswordRecoveryResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, TransactionsGetTransactionsData, TransactionsGetTransactionsResponse, TransactionsCreateTransactionData, TransactionsCreateTransactionResponse, TransactionsGetTransactionData, TransactionsGetTransactionResponse, TransactionsUpdateTransactionData, TransactionsUpdateTransactionResponse, TransactionsDeleteTransactionData, TransactionsDeleteTransactionResponse, UsersGetUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersGetUserData, UsersGetUserResponse, UsersGetUser1Data, UsersGetUser1Response, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse } from './types.gen';
+import type { CategoriesGetCategoriesData, CategoriesGetCategoriesResponse, CategoriesCreateCategoryData, CategoriesCreateCategoryResponse, CategoriesGetCategoryData, CategoriesGetCategoryResponse, CategoriesUpdateCategoryData, CategoriesUpdateCategoryResponse, CategoriesDeleteCategoryData, CategoriesDeleteCategoryResponse, ReadRootResponse, LoginGetAccessTokenData, LoginGetAccessTokenResponse, LoginPasswordRecoveryData, LoginPasswordRecoveryResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, TransactionsGetTransactionsData, TransactionsGetTransactionsResponse, TransactionsCreateTransactionData, TransactionsCreateTransactionResponse, TransactionsGetTransactionData, TransactionsGetTransactionResponse, TransactionsUpdateTransactionData, TransactionsUpdateTransactionResponse, TransactionsDeleteTransactionData, TransactionsDeleteTransactionResponse, TransactionsGetCategorySpendingData, TransactionsGetCategorySpendingResponse, TransactionsGetMonthlyTrendsData, TransactionsGetMonthlyTrendsResponse, UsersGetUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersGetUserData, UsersGetUserResponse, UsersGetUser1Data, UsersGetUser1Response, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse } from './types.gen';
 
 export class CategoriesService {
     /**
@@ -316,6 +316,48 @@ export class TransactionsService {
             url: '/api/v1/transactions/{transaction_id}',
             path: {
                 transaction_id: data.transactionId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Category Spending
+     * 카테고리별 지출 통계 (지출만, 상위 N개)
+     * @param data The data for the request.
+     * @param data.limit
+     * @returns CategorySpending Successful Response
+     * @throws ApiError
+     */
+    public static getCategorySpending(data: TransactionsGetCategorySpendingData = {}): CancelablePromise<TransactionsGetCategorySpendingResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/transactions/statistics/category-spending',
+            query: {
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Monthly Trends
+     * 월별 수입/지출 추이 (최근 N개월)
+     * @param data The data for the request.
+     * @param data.months
+     * @returns MonthlyTrend Successful Response
+     * @throws ApiError
+     */
+    public static getMonthlyTrends(data: TransactionsGetMonthlyTrendsData = {}): CancelablePromise<TransactionsGetMonthlyTrendsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/transactions/statistics/monthly-trends',
+            query: {
+                months: data.months
             },
             errors: {
                 422: 'Validation Error'

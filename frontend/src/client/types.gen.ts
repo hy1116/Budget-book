@@ -27,6 +27,13 @@ export type CategoryResponse = {
     updated_at?: (string | null);
 };
 
+export type CategorySpending = {
+    category_id: number;
+    category_name: string;
+    total_amount: number;
+    transaction_count: number;
+};
+
 export type CategoryUpdate = {
     name?: (string | null);
     description?: (string | null);
@@ -38,6 +45,14 @@ export type HTTPValidationError = {
 
 export type Message = {
     message: string;
+};
+
+export type MonthlyTrend = {
+    year: number;
+    month: number;
+    income: number;
+    expense: number;
+    net: number;
 };
 
 export type NewPassword = {
@@ -211,6 +226,18 @@ export type TransactionsDeleteTransactionData = {
 };
 
 export type TransactionsDeleteTransactionResponse = (void);
+
+export type TransactionsGetCategorySpendingData = {
+    limit?: number;
+};
+
+export type TransactionsGetCategorySpendingResponse = (Array<CategorySpending>);
+
+export type TransactionsGetMonthlyTrendsData = {
+    months?: number;
+};
+
+export type TransactionsGetMonthlyTrendsResponse = (Array<MonthlyTrend>);
 
 export type UsersGetUserMeResponse = (UserPublic);
 

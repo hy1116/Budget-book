@@ -216,10 +216,20 @@ export class LoginService {
 export class TransactionsService {
     /**
      * Get Transactions
-     * 전체 거래내역 조회
+     * 전체 거래내역 조회 (필터링 및 정렬 지원)
      * @param data The data for the request.
      * @param data.skip
      * @param data.limit
+     * @param data.transactionType
+     * @param data.categoryId
+     * @param data.paymentMethod
+     * @param data.startDate
+     * @param data.endDate
+     * @param data.minAmount
+     * @param data.maxAmount
+     * @param data.searchQuery
+     * @param data.sortBy
+     * @param data.sortOrder
      * @returns TransactionPaginatedResponse Successful Response
      * @throws ApiError
      */
@@ -229,7 +239,17 @@ export class TransactionsService {
             url: '/api/v1/transactions/',
             query: {
                 skip: data.skip,
-                limit: data.limit
+                limit: data.limit,
+                transaction_type: data.transactionType,
+                category_id: data.categoryId,
+                payment_method: data.paymentMethod,
+                start_date: data.startDate,
+                end_date: data.endDate,
+                min_amount: data.minAmount,
+                max_amount: data.maxAmount,
+                search_query: data.searchQuery,
+                sort_by: data.sortBy,
+                sort_order: data.sortOrder
             },
             errors: {
                 422: 'Validation Error'

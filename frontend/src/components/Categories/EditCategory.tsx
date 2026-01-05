@@ -50,7 +50,7 @@ const EditCategory = ({ category }: EditCategoryProps) => {
     criteriaMode: "all",
     defaultValues: {
       name: category.name,
-      description: category.description,
+      description: category.description || undefined,
     },
   })
 

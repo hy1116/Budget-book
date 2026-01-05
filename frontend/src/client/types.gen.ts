@@ -11,7 +11,7 @@ export type Body_login_get_access_token = {
 
 export type CategoryCreate = {
     name: string;
-    description: string;
+    description: (string | null);
 };
 
 export type CategoryPaginatedResponse = {
@@ -21,7 +21,7 @@ export type CategoryPaginatedResponse = {
 
 export type CategoryResponse = {
     name: string;
-    description: string;
+    description: (string | null);
     id: number;
     created_at: string;
     updated_at?: (string | null);
@@ -196,8 +196,18 @@ export type LoginRecoverPasswordHtmlContentData = {
 export type LoginRecoverPasswordHtmlContentResponse = (string);
 
 export type TransactionsGetTransactionsData = {
+    categoryId?: (number | null);
+    endDate?: (string | null);
     limit?: number;
+    maxAmount?: (number | null);
+    minAmount?: (number | null);
+    paymentMethod?: (PaymentMethod | null);
+    searchQuery?: (string | null);
     skip?: number;
+    sortBy?: string;
+    sortOrder?: string;
+    startDate?: (string | null);
+    transactionType?: (TransactionType | null);
 };
 
 export type TransactionsGetTransactionsResponse = (TransactionPaginatedResponse);

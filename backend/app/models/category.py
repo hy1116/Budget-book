@@ -6,7 +6,7 @@ from app.models.base import Base
 # base schema (without id, created_at, updated_at for create/update schemas)
 class CategoryBase(SQLModel):
     name: str = Field(min_length=1, max_length=50, unique=True, index=True)
-    description: str = Field(max_length=200)
+    description: Optional[str] = Field(max_length=200)
 
 # entity
 class Category(CategoryBase, Base, table=True):

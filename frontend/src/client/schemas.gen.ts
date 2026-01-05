@@ -66,8 +66,15 @@ export const CategoryCreateSchema = {
             title: 'Name'
         },
         description: {
-            type: 'string',
-            maxLength: 200,
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 200
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Description'
         }
     },
@@ -104,8 +111,15 @@ export const CategoryResponseSchema = {
             title: 'Name'
         },
         description: {
-            type: 'string',
-            maxLength: 200,
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 200
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Description'
         },
         id: {

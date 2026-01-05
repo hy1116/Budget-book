@@ -1,22 +1,84 @@
-from typing import List
+from typing import List, Optional
+from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from sqlmodel import select, func
 from sqlalchemy.orm import selectinload
 from app.core.database import CurrentUser, SessionDep
-from app.models.transaction import Transaction, TransactionCreate, TransactionResponse, TransactionUpdate, TransactionPaginatedResponse, TransactionType, CategorySpending, MonthlyTrend
+from app.models.transaction import Transaction, TransactionCreate, TransactionResponse, TransactionUpdate, TransactionPaginatedResponse, TransactionType, PaymentMethod, CategorySpending, MonthlyTrend
 from app.models.category import Category
 
 router = APIRouter(prefix="/transactions",tags=["transactions"])
 
 @router.get("/", response_model=TransactionPaginatedResponse)
-def get_transactions(current_user: CurrentUser, session: SessionDep, skip: int = 0, limit: int = 100):
-    """전체 거래내역 조회"""
+def get_transactions(
+    current_user: CurrentUser,
+    session: SessionDep,
+    skip: int = 0,
+    limit: int = 100,
+    # 필터 파라미터
+    transaction_type: Optional[TransactionType] = None,
+    category_id: Optional[int] = None,
+    payment_method: Optional[PaymentMethod] = None,
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
+    min_amount: Optional[int] = None,
+    max_amount: Optional[int] = None,
+    search_query: Optional[str] = None,
+    # 정렬 파라미터
+    sort_by: str = "date",
+    sort_order: str = "desc",
+):
+    """전체 거래내역 조회 (필터링 및 정렬 지원)"""
+
+    # WHERE 조건 동적 구성
+    filters = [Transaction.user_id == current_user.id]
+
+    if transaction_type:
+        filters.append(Transaction.transaction_type == transaction_type)
+
+    if category_id:
+        filters.append(Transaction.category_id == category_id)
+
+    if payment_method:
+        filters.append(Transaction.payment_method == payment_method)
+
+    if start_date:
+        filters.append(Transaction.transaction_date >= start_date)
+
+    if end_date:
+        # 하루의 마지막까지 포함
+        end_datetime = end_date.replace(hour=23, minute=59, second=59)
+        filters.append(Transaction.transaction_date <= end_datetime)
+
+    if min_amount is not None and min_amount > 0:
+        filters.append(Transaction.amount >= min_amount)
+
+    if max_amount is not None and max_amount > 0:
+        filters.append(Transaction.amount <= max_amount)
+
+    if search_query and search_query.strip():
+        # LIKE 검색 (대소문자 무시)
+        filters.append(Transaction.description.ilike(f"%{search_query.strip()}%"))
+
     # Get total count
-    count_statement = select(func.count()).select_from(Transaction).where(Transaction.user_id == current_user.id)
+    count_statement = select(func.count()).select_from(Transaction).where(*filters)
     total = session.exec(count_statement).one()
 
+    # 정렬 기준 결정
+    if sort_by == "amount":
+        order_column = Transaction.amount.desc() if sort_order == "desc" else Transaction.amount.asc()
+    else:  # date (기본값)
+        order_column = Transaction.transaction_date.desc() if sort_order == "desc" else Transaction.transaction_date.asc()
+
     # Get paginated items
-    statement = select(Transaction).where(Transaction.user_id == current_user.id).options(selectinload(Transaction.category)).order_by(Transaction.transaction_date.desc()).offset(skip).limit(limit)
+    statement = (
+        select(Transaction)
+        .where(*filters)
+        .options(selectinload(Transaction.category))
+        .order_by(order_column)
+        .offset(skip)
+        .limit(limit)
+    )
     transactions = session.exec(statement).all()
 
     return TransactionPaginatedResponse(items=transactions, total=total)

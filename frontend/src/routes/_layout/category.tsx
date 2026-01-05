@@ -13,6 +13,7 @@ import { z } from "zod"
 
 import { CategoriesService } from "@/client"
 import AddCategory from "@/components/Categories/AddCategory"
+import CategoryFilters, { type CategoryFilterValues } from "@/components/Categories/CategoryFilters"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CategoryActionsMenu } from "@/components/Categories/CategoryActionsMenu"
 import {
@@ -24,15 +25,25 @@ import {
 
 const categoriesSearchSchema = z.object({
   page: z.number().catch(1),
+  searchQuery: z.string().optional(),
 })
 
 const PER_PAGE = 10
 
-function getCategoriesQueryOptions({ page }: { page: number }) {
+function getCategoriesQueryOptions(params: {
+  page: number
+  filters: Partial<z.infer<typeof categoriesSearchSchema>>
+}) {
+  const { page, filters } = params
+
   return {
     queryFn: () =>
-      CategoriesService.getCategories({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
-    queryKey: ["categories", { page }],
+      CategoriesService.getCategories({
+        skip: (page - 1) * PER_PAGE,
+        limit: PER_PAGE,
+        searchQuery: filters.searchQuery,
+      }),
+    queryKey: ["categories", { page, ...filters }],
   }
 }
 
@@ -43,10 +54,11 @@ export const Route = createFileRoute("/_layout/category")({
 
 function CategoryTable() {
   const navigate = useNavigate({ from: Route.fullPath })
-  const { page = 1 } = Route.useSearch()
+  const searchParams = Route.useSearch()
+  const { page = 1 } = searchParams
 
   const { data, isLoading, isPlaceholderData } = useQuery({
-    ...getCategoriesQueryOptions({ page }),
+    ...getCategoriesQueryOptions({ page, filters: searchParams }),
     placeholderData: (prevData) => prevData,
   })
 
@@ -138,12 +150,34 @@ function CategoryTable() {
 }
 
 function Category() {
+  const navigate = useNavigate({ from: Route.fullPath })
+  const searchParams = Route.useSearch()
+
+  const handleApplyFilters = (filters: CategoryFilterValues) => {
+    navigate({
+      to: "/category",
+      search: { ...filters, page: 1 },
+    })
+  }
+
+  const handleResetFilters = () => {
+    navigate({
+      to: "/category",
+      search: { page: 1 },
+    })
+  }
+
   return (
     <Container maxW="full">
       <Heading size="lg" pt={12}>
         Category Management
       </Heading>
       <AddCategory />
+      <CategoryFilters
+        onApplyFilters={handleApplyFilters}
+        onResetFilters={handleResetFilters}
+        defaultValues={searchParams}
+      />
       <CategoryTable />
     </Container>
   )

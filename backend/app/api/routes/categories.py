@@ -7,14 +7,26 @@ from app.models.category import Category, CategoryCreate, CategoryUpdate, Catego
 router = APIRouter(prefix="/categories", tags=["categories"])
 
 @router.get("/", response_model=CategoryPaginatedResponse)
-def get_categories(db: SessionDep, skip: int = 0, limit: int = 100):
+def get_categories(
+    db: SessionDep,
+    skip: int = 0,
+    limit: int = 100,
+    search_query: str | None = None
+):
     """전체 카테고리 조회"""
-    # Get total count
-    count_statement = select(func.count()).select_from(Category)
+    # Base statement
+    statement = select(Category)
+
+    # Apply search filter
+    if search_query:
+        statement = statement.where(Category.name.ilike(f"%{search_query}%"))
+
+    # Get total count with filters
+    count_statement = select(func.count()).select_from(statement.subquery())
     total = db.exec(count_statement).one()
 
     # Get paginated items
-    statement = select(Category).offset(skip).limit(limit)
+    statement = statement.offset(skip).limit(limit)
     categories = db.exec(statement).all()
 
     return CategoryPaginatedResponse(items=categories, total=total)

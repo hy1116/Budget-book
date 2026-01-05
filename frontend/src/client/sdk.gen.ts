@@ -12,6 +12,7 @@ export class CategoriesService {
      * @param data The data for the request.
      * @param data.skip
      * @param data.limit
+     * @param data.searchQuery
      * @returns CategoryPaginatedResponse Successful Response
      * @throws ApiError
      */
@@ -21,7 +22,8 @@ export class CategoriesService {
             url: '/api/v1/categories/',
             query: {
                 skip: data.skip,
-                limit: data.limit
+                limit: data.limit,
+                search_query: data.searchQuery
             },
             errors: {
                 422: 'Validation Error'

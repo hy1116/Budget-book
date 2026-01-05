@@ -139,6 +139,7 @@ export type ValidationError = {
 
 export type CategoriesGetCategoriesData = {
     limit?: number;
+    searchQuery?: (string | null);
     skip?: number;
 };
 
